@@ -196,7 +196,7 @@ const CONFIG = {
   VIDEO_MP4: "",            // link directo a un .mp4
   VIDEO_YOUTUBE_ID: "",     // o ID de YouTube (video oculto)
   API_URL: "https://script.google.com/macros/s/AKfycbxjMH-IkZVfoXZH_u16dx8dnKuG5IbAM7Jv1ZZklXQCwgRnw1ZRnXcgzQpwXjWnj2aWdg/exec",           // solo si la página se aloja fuera de Google: URL /exec de Apps Script
-  REINICIO_SEGUNDOS: 35,
+  REINICIO_SEGUNDOS: 60,
   FRASES: [
     "Psst… tú. Sí, tú.",
     "Te apuesto a que no adivinas qué tipo de emprendedor eres.",
@@ -238,7 +238,8 @@ function ir(id){
   const v=document.querySelector("#guia video"); if(v){ id==="p-guia"?v.play().catch(()=>{}):v.pause(); }
   vigilar();
 }
-function empezar(){ paso=0; elecciones=[]; pregunta(); }
+let bloqueo=false;
+function empezar(){ paso=0; elecciones=[]; bloqueo=false; pregunta(); }
 function pregunta(){
   const q=PREGUNTAS[paso];
   $("progreso").innerHTML=PREGUNTAS.map((_,i)=>`<i class="${i<=paso?"ok":""}"></i>`).join("");
@@ -249,7 +250,7 @@ function pregunta(){
     const b=document.createElement("button");
     b.className="op"+(elecciones[paso]&&elecciones[paso][0]===txt?" sel":"");
     b.innerHTML=`<b>${"ABCD"[i]}</b><span>${txt}</span>`;
-    b.onclick=()=>{ elecciones[paso]=[txt,p]; b.classList.add("sel"); setTimeout(()=>{ paso++; paso<PREGUNTAS.length?pregunta():ir("p-datos"); },230); };
+    b.onclick=()=>{ if(bloqueo) return; bloqueo=true; elecciones[paso]=[txt,p]; b.classList.add("sel"); setTimeout(()=>{ bloqueo=false; paso++; paso<PREGUNTAS.length?pregunta():ir("p-datos"); },230); };
     $("q-opciones").appendChild(b);
   });
   ir("p-pregunta");
@@ -261,7 +262,7 @@ document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
 });
 
 function calcular(){
-  const pts={V:0,E:0,R:0,C:0}; elecciones.forEach(e=>pts[e[1]]++);
+  const pts={V:0,E:0,R:0,C:0}; elecciones.forEach(e=>{ if(e) pts[e[1]]++; });
   const orden=Object.keys(pts).sort((a,b)=>pts[b]-pts[a]);
   return { p:orden[0], t: pts[orden[1]]>0 ? orden[1] : null };
 }
