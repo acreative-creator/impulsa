@@ -34,6 +34,11 @@ h1 em{font-style:normal;color:var(--nar)}
 /* Guía */
 #guia{width:min(88vw,calc(62vh*9/16));aspect-ratio:9/16;max-height:62vh;border-radius:28px;overflow:hidden;position:relative;background:linear-gradient(160deg,var(--card),var(--navy2));box-shadow:0 30px 80px rgba(0,0,0,.45);border:2px solid rgba(201,204,240,.15)}
 #guia video,#guia iframe{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
+#p-guia #guia.lleno{position:fixed;inset:0;width:100%;height:100%;max-height:none;aspect-ratio:auto;border-radius:0;border:0;box-shadow:none;animation:none;z-index:0}
+#p-guia #guia.lleno::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(transparent,rgba(2,0,77,.7))}
+#p-guia .btn{position:relative;z-index:2}
+#p-guia{justify-content:flex-end;padding-bottom:7vh}
+.marca{position:relative;z-index:3}
 #guia .vacio{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--suave);font-size:18px;padding:24px}
 #frase{position:absolute;left:6%;right:6%;bottom:6%;background:rgba(2,0,77,.82);backdrop-filter:blur(6px);border-radius:16px;padding:14px 18px;font-weight:700;font-size:clamp(17px,2.4vh,26px);transition:opacity .4s}
 /* Preguntas */
@@ -331,7 +336,7 @@ function vigilar(){ clearTimeout(temporizador); if($("p-guia").classList.contain
 /* Guía: video + frases que rotan */
 (function(){
   const g=$("guia");
-  if(CONFIG.VIDEO_MP4){ $("guia-vacio").remove(); $("frase").style.display="none"; g.insertAdjacentHTML("afterbegin",`<video src="${CONFIG.VIDEO_MP4}" autoplay muted loop playsinline></video>`);
+  if(CONFIG.VIDEO_MP4){ $("guia-vacio").remove(); $("frase").style.display="none"; g.classList.add("lleno"); g.insertAdjacentHTML("afterbegin",`<video src="${CONFIG.VIDEO_MP4}" autoplay muted loop playsinline></video>`);
     const v=g.querySelector("video"); v.muted=false; v.play().catch(()=>{ v.muted=true; v.play(); });
     document.addEventListener("pointerdown",()=>{ v.muted=false; },{once:true}); }
   else if(CONFIG.VIDEO_YOUTUBE_ID){ const id=CONFIG.VIDEO_YOUTUBE_ID; $("guia-vacio").remove();
