@@ -38,17 +38,18 @@ h1 em{font-style:normal;color:var(--nar)}
 #p-guia #guia.lleno::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(transparent,rgba(2,0,77,.7))}
 #p-guia .btn{position:relative;z-index:2}
 body.envideo:has(#p-guia.activa) .marca{display:none}
-#escena{position:fixed;inset:0;z-index:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:10vh 7vw 20vh;text-align:center}
+#escena{position:fixed;inset:0;z-index:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:13vh 3.5vh 19vh;text-align:center;box-sizing:border-box}
 #escena.on{display:flex}
 body:not(.envideo) #p-guia #guia.lleno{visibility:hidden}
-.e-tit{font-family:'Bebas Neue';font-size:clamp(44px,7.5vh,90px);line-height:.95;letter-spacing:2px}
+.e-tit{font-family:'Bebas Neue';font-size:clamp(36px,6.4vh,80px);line-height:.95;letter-spacing:2px}
+#escena .e-tit.chico{font-size:clamp(32px,5.4vh,66px);white-space:nowrap}
 .e-tit b{color:#FF7900;font-weight:400}
 .e-sub{font-size:clamp(17px,2.6vh,28px);color:var(--suave);margin-top:2.5vh;max-width:28ch}
 .e-frase{opacity:0;animation:entra .8s forwards}
-.e-grid{display:grid;grid-template-columns:1fr 1fr;gap:3vh 5vw;margin-top:4vh;width:100%}
-.e-pj{opacity:0;animation:pjEntra .7s forwards}
-.e-pj img{width:min(32vw,18vh);aspect-ratio:1;border-radius:50%;object-fit:cover;border:3px solid rgba(255,121,0,.75);box-shadow:0 0 40px rgba(71,59,240,.6);animation:pjVive 4s ease-in-out infinite}
-.e-pj div{font-family:'Bebas Neue';font-size:clamp(22px,3.4vh,38px);letter-spacing:1px;margin-top:1vh}
+.e-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.4vh 2vh;margin-top:3.5vh;width:100%;max-width:46vh}
+.e-pj{opacity:0;animation:pjEntra .7s forwards;min-width:0}
+.e-pj img{width:min(36vw,15vh);aspect-ratio:1;border-radius:50%;object-fit:cover;border:3px solid rgba(255,121,0,.75);box-shadow:0 0 40px rgba(71,59,240,.6);animation:pjVive 4s ease-in-out infinite}
+.e-pj div{font-family:'Bebas Neue';font-size:clamp(18px,2.8vh,32px);letter-spacing:1px;margin-top:.8vh;white-space:nowrap}
 #p-guia{justify-content:flex-end;padding-bottom:7vh}
 #guia .vacio{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--suave);font-size:18px;padding:24px}
 #frase{position:absolute;left:6%;right:6%;bottom:6%;background:rgba(2,0,77,.82);backdrop-filter:blur(6px);border-radius:16px;padding:14px 18px;font-weight:700;font-size:clamp(17px,2.4vh,26px);transition:opacity .4s}
@@ -354,7 +355,7 @@ function vigilar(){ clearTimeout(temporizador); if($("p-guia").classList.contain
               ["Descubre tu perfil<br>en <b>1 minuto</b>","6 preguntas. Un resultado que te va a sorprender."],
               ["Haz que <b>Impulsa</b><br>te conozca","Juega y entra al Radar Impulsa."],
               ["¿Visionario o<br><b>Realizador</b>?","Solo hay una forma de saberlo."]];
-    const escenaPJ=()=>{ ESC.innerHTML=`<div class="e-tit e-frase">¿Cuál de estos<br><b>eres tú?</b></div><div class="e-grid">${["V","E","R","C"].map((k,i)=>`<div class="e-pj" style="animation-delay:${.5+i*.6}s"><img src="data:image/jpeg;base64,${PJ[k]}" alt=""><div>El ${PERFILES[k].nombre}</div></div>`).join("")}</div>`; };
+    const escenaPJ=()=>{ ESC.innerHTML=`<div class="e-tit e-frase chico">¿Cuál de estos<br><b>eres tú?</b></div><div class="e-grid">${["V","E","R","C"].map((k,i)=>`<div class="e-pj" style="animation-delay:${.5+i*.6}s"><img src="data:image/jpeg;base64,${PJ[k]}" alt=""><div>El ${PERFILES[k].nombre}</div></div>`).join("")}</div>`; };
     const escenaFrase=()=>{ const f=FR[frI++%FR.length]; ESC.innerHTML=`<div class="e-tit e-frase">${f[0]}</div><p class="e-sub e-frase" style="animation-delay:.6s">${f[1]}</p>`; };
     const M=new Audio("musica.mp3"); M.loop=true; M.volume=0; let fadeT;
     const musica=vol=>{ clearInterval(fadeT); if(M.paused&&vol>0) M.play().catch(()=>{});
