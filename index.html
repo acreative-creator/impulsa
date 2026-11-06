@@ -40,6 +40,7 @@ h1 em{font-style:normal;color:var(--nar)}
 body.envideo:has(#p-guia.activa) .marca{display:none}
 #escena{position:fixed;inset:0;z-index:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:10vh 7vw 20vh;text-align:center}
 #escena.on{display:flex}
+body:not(.envideo) #p-guia #guia.lleno{visibility:hidden}
 .e-tit{font-family:'Bebas Neue';font-size:clamp(44px,7.5vh,90px);line-height:.95;letter-spacing:2px}
 .e-tit b{color:#FF7900;font-weight:400}
 .e-sub{font-size:clamp(17px,2.6vh,28px);color:var(--suave);margin-top:2.5vh;max-width:28ch}
