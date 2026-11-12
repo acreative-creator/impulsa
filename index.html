@@ -40,6 +40,9 @@ h1 em{font-style:normal;color:var(--nar)}
 body.envideo:has(#p-guia.activa) .marca{display:none}
 #escena{position:fixed;inset:0;z-index:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:13vh 3.5vh 19vh;text-align:center;box-sizing:border-box}
 #escena.on{display:flex}
+#anim{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:none;background:#fff}
+#anim.on{display:block}
+body:has(#anim.on) .marca,body:has(#anim.on) .pie{display:none}
 body:not(.envideo) #p-guia #guia.lleno{visibility:hidden}
 .e-tit{font-family:'Bebas Neue';font-size:clamp(36px,6.4vh,80px);line-height:.95;letter-spacing:2px}
 #escena .e-tit.chico{font-size:clamp(32px,5.4vh,66px);white-space:nowrap}
@@ -91,6 +94,12 @@ body:not(.envideo) #p-guia #guia.lleno{visibility:hidden}
 .t-rasgos{display:flex;flex-direction:column;gap:.8vh;font-size:clamp(14px,1.9vh,21px);font-weight:600;position:relative}
 .t-pie{font-size:clamp(11px,1.4vh,15px);color:var(--suave);position:relative}
 .foto{font-size:clamp(16px,2.2vh,24px);font-weight:700;color:var(--nar)}
+.sigue{display:flex;align-items:center;gap:2vh;background:rgba(255,255,255,.08);border:1px solid rgba(201,204,240,.22);border-radius:18px;padding:1.2vh 2.4vh 1.2vh 1.2vh;text-align:left}
+.sigue img{width:12vh;height:12vh;border-radius:12px;background:#fff;display:block}
+.sigue div{display:flex;flex-direction:column;gap:.3vh}
+.sigue b{font-family:'Bebas Neue';font-weight:400;font-size:clamp(22px,3.2vh,36px);letter-spacing:1px;line-height:1}
+.sigue span{font-size:clamp(13px,1.8vh,20px);color:var(--suave)}
+.sigue em{font-style:normal;font-weight:700;color:var(--nar);font-size:clamp(15px,2vh,22px)}
 .pie{position:fixed;bottom:2vh;left:0;right:0;text-align:center;font-size:clamp(11px,1.5vh,15px);color:var(--suave);opacity:.75;z-index:3}
 /* ===== Profundidad y movimiento (estilo Impulsa) ===== */
 .fondo{background:radial-gradient(ellipse at 70% -10%,#1a128f 0%,var(--navy) 55%),var(--navy)}
@@ -203,6 +212,7 @@ h1 em,#q-texto em{color:var(--nar);text-shadow:0 0 30px rgba(255,121,0,.45)}
 <section class="pantalla" id="p-resultado">
   <div class="tarjeta" id="tarjeta"></div>
   <div class="foto">📸 ¡Tómale foto y compártela!</div>
+  <div class="sigue"><img src="qr-instagram.jpg" alt="QR Instagram @impulsa.vc"><div><b>Síguenos en Instagram</b><span>y sé parte de nuestra comunidad</span><em>@impulsa.vc</em></div></div>
   <button class="link" onclick="reiniciar()">Terminar</button>
 </section>
 
@@ -253,7 +263,7 @@ const enGoogle = typeof google!=="undefined" && google.script && google.script.r
 function ir(id){
   document.querySelectorAll(".pantalla").forEach(s=>s.classList.remove("activa"));
   $(id).classList.add("activa");
-  const v=document.querySelector("#guia video"); if(v){ if(id==="p-guia") cicloGuia(0); else { clearTimeout(cicloT); v.pause(); window.pararMusica&&pararMusica(); } }
+  const v=document.querySelector("#guia video"); if(v){ if(id==="p-guia") cicloGuia(0); else { clearTimeout(cicloT); v.pause(); const a=$("anim"); if(a){ a.pause(); a.classList.remove("on"); } window.pararMusica&&pararMusica(); } }
   vigilar();
 }
 let bloqueo=false;
@@ -361,15 +371,23 @@ function vigilar(){ clearTimeout(temporizador); if($("p-guia").classList.contain
     const musica=vol=>{ clearInterval(fadeT); if(M.paused&&vol>0) M.play().catch(()=>{});
       fadeT=setInterval(()=>{ const d=vol-M.volume; if(Math.abs(d)<.02){ M.volume=vol; clearInterval(fadeT); if(vol===0) M.pause(); } else M.volume=Math.min(1,Math.max(0,M.volume+Math.sign(d)*.02)); },50); };
     window.pararMusica=()=>musica(0);
+    $("p-guia").insertAdjacentHTML("afterbegin",`<video id="anim" src="impulsa-anim.mp4" playsinline preload="auto"></video>`);
+    const A=$("anim");
     window.cicloGuia=function(n){ clearTimeout(cicloT); if(!$("p-guia").classList.contains("activa")) return;
-      if(n===0){ ESC.classList.remove("on"); document.body.classList.add("envideo"); v.currentTime=0;
-        const voz=Date.now()-ultimaVoz>120000; v.muted=!voz; musica(voz?.04:.3);
-        v.play().then(()=>{ if(!v.muted) ultimaVoz=Date.now(); }).catch(()=>{ v.muted=true; musica(.3); v.play().catch(()=>{}); });
+      A.classList.remove("on"); if(n!==4) A.pause();
+      if(n===0){ if(Date.now()-ultimaVoz<=120000) return cicloGuia(1);
+        ESC.classList.remove("on"); document.body.classList.add("envideo"); v.currentTime=0; v.muted=false; musica(.04);
+        v.play().then(()=>{ ultimaVoz=Date.now(); }).catch(()=>{ v.pause(); cicloGuia(1); });
         return; }
-      v.pause(); document.body.classList.remove("envideo"); ESC.classList.add("on"); musica(.3);
-      if(n===1){ escenaPJ(); cicloT=setTimeout(()=>cicloGuia(2),20000); }
+      v.pause(); document.body.classList.remove("envideo");
+      if(n===4){ ESC.classList.remove("on"); A.classList.add("on"); A.currentTime=0; A.muted=false; musica(0);
+        A.play().catch(()=>{ A.muted=true; musica(.3); A.play().catch(()=>cicloGuia(2)); });
+        cicloT=setTimeout(()=>cicloGuia(2),40000); return; }
+      ESC.classList.add("on"); musica(.3);
+      if(n===1){ escenaPJ(); cicloT=setTimeout(()=>cicloGuia(4),20000); }
       else { escenaFrase(); cicloT=setTimeout(()=>cicloGuia(n===2?3:0),10000); } };
     v.addEventListener("ended",()=>cicloGuia(1));
+    A.addEventListener("ended",()=>cicloGuia(2));
     cicloGuia(0); }
   else if(CONFIG.VIDEO_YOUTUBE_ID){ const id=CONFIG.VIDEO_YOUTUBE_ID; $("guia-vacio").remove();
     g.insertAdjacentHTML("afterbegin",`<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media"></iframe>`); }

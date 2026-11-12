@@ -96,6 +96,11 @@ h1 em,h2 em{text-shadow:none}
 .chip.sel{color:#fff}
 .archivo{border-color:#C9CCF0}.archivo span{color:#464FA1}.archivo.ok span{color:var(--navy)}
 .sec{border-color:#C9CCF0;color:var(--navy)}
+.redes{margin:34px auto 0;max-width:520px;background:var(--bl);border:1px solid #DADDF2;border-radius:22px;padding:26px 22px}
+.redes h2{font-size:clamp(24px,5vw,32px);line-height:1.1;margin-bottom:18px}
+.redes-bt{display:flex;flex-direction:column;gap:12px}
+.red{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:700;padding:15px 20px;border-radius:999px;color:#fff;background:var(--navy)}
+.red:first-child{background:var(--nar)}
 .prog{background:linear-gradient(#fff 70%,transparent)}
 .prog .barra{background:#E9EAF7}
 header .tag{background:#fff}
@@ -135,7 +140,13 @@ header .tag{background:#fff}
       <div class="radar"><i></i></div>
       <h1 id="f-tit">¡Listo! Ya estás en el <em>radar</em></h1>
       <p class="lead" style="margin:18px auto">Recibimos el perfil de tu startup. El equipo de Impulsa lo revisará y, si hay match, te contactaremos por correo.</p>
-      <a class="sec" style="text-decoration:none;display:inline-block" href="https://www.instagram.com/impulsa.vc/">Sigue a Impulsa en Instagram</a>
+      <div class="redes">
+        <h2>Síguenos y sé parte de nuestra <em>comunidad</em></h2>
+        <div class="redes-bt">
+          <a class="red" href="https://www.instagram.com/impulsa.vc/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>Instagram · @impulsa.vc</a>
+          <a class="red" href="https://www.linkedin.com/company/impulsa-vc/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z"/></svg>LinkedIn · Impulsa VC</a>
+        </div>
+      </div>
     </div>
   </section>
 </main>
@@ -150,7 +161,7 @@ const DEF=["Pobremente definido","Moderadamente definido","Bien definido","Extre
 const PASOS=[
  {etq:"Paso 1 · Tu startup",tit:"Cuéntanos <em>quiénes son</em>",q:[
   {id:"startup",l:"Nombre de la Startup",t:"texto",r:1},
-  {id:"web",l:"Sitio Web / URL",t:"texto",r:1,ph:"https://"},
+  {id:"web",l:"Página web y/o redes sociales",t:"texto",r:0,ph:"https://… o @usuario"},
   {id:"hq",l:"Ubicación de HQ",a:"Si tienen más de una, marca todas las que apliquen.",t:"varios",o:ESTADOS,r:1},
   {id:"sector",l:"Sector / Industria",t:"lista",o:["Fintech","Salud/Healthtech","Educación/Edtech","Software B2B","E-commerce","Logística y Cadena de Suministro","Sostenibilidad/Cleantech","IA y Machine Learning","Manufactura","Transporte","Otro"],r:1},
   {id:"conociste",l:"¿Cómo nos conociste?",t:"uno",o:["Pagina web","Redes sociales","Eventos","Referido"],r:1},
