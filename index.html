@@ -375,9 +375,9 @@ function vigilar(){ clearTimeout(temporizador); if($("p-guia").classList.contain
     const A=$("anim");
     window.cicloGuia=function(n){ clearTimeout(cicloT); if(!$("p-guia").classList.contains("activa")) return;
       A.classList.remove("on"); if(n!==4) A.pause();
-      if(n===0){ if(Date.now()-ultimaVoz<=120000) return cicloGuia(1);
-        ESC.classList.remove("on"); document.body.classList.add("envideo"); v.currentTime=0; v.muted=false; musica(.04);
-        v.play().then(()=>{ ultimaVoz=Date.now(); }).catch(()=>{ v.pause(); cicloGuia(1); });
+      if(n===0){ ESC.classList.remove("on"); document.body.classList.add("envideo"); v.currentTime=0;
+        const voz=Date.now()-ultimaVoz>120000; v.muted=!voz; musica(voz?.04:.3);
+        v.play().then(()=>{ if(!v.muted) ultimaVoz=Date.now(); }).catch(()=>{ v.muted=true; musica(.3); v.play().catch(()=>cicloGuia(1)); });
         return; }
       v.pause(); document.body.classList.remove("envideo");
       if(n===4){ ESC.classList.remove("on"); A.classList.add("on"); A.currentTime=0; A.muted=false; musica(0);
